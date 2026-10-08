@@ -1,0 +1,10 @@
+{
+  "name": "AI 수학 오답노트",
+  "short_name": "수학 오답노트",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#4f46e5",
+  "lang": "ko",
+  "icons": []
+}

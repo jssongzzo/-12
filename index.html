@@ -1,88 +1,151 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4f46e5">
-<meta name="description" content="수학경시대회 기출문제와 오답노트를 한곳에서 관리하는 PWA">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="style.css">
-<title>수학경시 오답노트</title>
+<meta name="description" content="AI 수학 오답노트 PWA">
+<link rel="manifest" href="./manifest.json">
+<title>AI 수학 오답노트</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;background:#f5f7fb;color:#111827}
+header{background:#4f46e5;color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:5}
+h1{margin:0;font-size:22px}.sub{opacity:.85;font-size:13px;margin-top:5px}
+nav{display:flex;gap:6px;padding:10px;background:white;border-bottom:1px solid #e5e7eb;position:sticky;top:79px;z-index:4;overflow:auto}
+nav button{border:0;background:#eef2ff;color:#3730a3;padding:10px 13px;border-radius:12px;white-space:nowrap}
+nav button.active{background:#4f46e5;color:white}
+main{padding:16px;max-width:760px;margin:auto}.card{background:white;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px #0000000d}
+button.primary{width:100%;border:0;border-radius:14px;padding:14px;background:#4f46e5;color:white;font-size:16px;font-weight:700}
+button.secondary{border:0;border-radius:12px;padding:10px 12px;background:#eef2ff;color:#3730a3}
+input[type=file]{display:none}.drop{border:2px dashed #c7d2fe;border-radius:16px;padding:24px;text-align:center;background:#fafaff}
+.preview{width:100%;border-radius:12px;margin-top:12px;max-height:420px;object-fit:contain;background:#f3f4f6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.item{border:1px solid #e5e7eb;border-radius:15px;overflow:hidden;background:white}.item img{width:100%;display:block}.item .body{padding:12px}
+.small{font-size:12px;color:#6b7280}.danger{background:#fee2e2!important;color:#991b1b!important}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input[type=text]{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px}
+.hidden{display:none}.status{padding:10px 12px;border-radius:10px;background:#f3f4f6;margin-top:10px;font-size:13px}
+footer{text-align:center;color:#9ca3af;font-size:12px;padding:30px}
+</style>
 </head>
 <body>
-<div id="app">
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">MATH CONTEST</div>
-      <h1>수학경시 오답노트</h1>
-    </div>
-    <button id="installBtn" class="ghost hidden">앱 설치</button>
-  </header>
+<header><h1>🤖 AI 수학 오답노트</h1><div class="sub">사진 한 장으로 틀린 문제를 자동 정리</div></header>
+<nav>
+<button class="active" data-tab="scan">📷 사진 분석</button>
+<button data-tab="wrong">❌ 오답 모음</button>
+<button data-tab="note">📒 오답노트</button>
+<button data-tab="settings">⚙️ 설정</button>
+</nav>
 
-  <main>
-    <section id="homeView" class="view active">
-      <div class="hero">
-        <div>
-          <span class="pill">오늘의 학습</span>
-          <h2>틀린 문제를<br><b>내 것으로 만들어요.</b></h2>
-          <p>기출문제를 풀고 틀린 문제는 자동으로 오답노트에 저장하세요.</p>
-        </div>
-        <div class="hero-icon">∑</div>
-      </div>
-      <div class="stats">
-        <div class="stat"><strong id="totalSolved">0</strong><span>푼 문제</span></div>
-        <div class="stat"><strong id="accuracy">0%</strong><span>정답률</span></div>
-        <div class="stat"><strong id="wrongCount">0</strong><span>오답</span></div>
-      </div>
-      <div class="section-head"><h3>학습 시작</h3></div>
-      <div class="cards">
-        <button class="action-card" data-go="quiz"><span>📝</span><div><b>기출문제 풀기</b><small>문제를 풀고 정답을 확인해요.</small></div><i>›</i></button>
-        <button class="action-card" data-go="wrong"><span>📕</span><div><b>오답노트</b><small>틀린 문제를 다시 풀어보세요.</small></div><i>›</i></button>
-        <button class="action-card" data-go="admin"><span>⚙️</span><div><b>관리자 · 문제 추가</b><small>휴대폰에서 기출문제를 직접 등록해요.</small></div><i>›</i></button>
-      </div>
-      <div class="section-head"><h3>학습 현황</h3></div>
-      <div class="progress-box">
-        <div class="progress-row"><span>전체 문제 진행률</span><b id="progressText">0 / 0</b></div>
-        <div class="progress"><div id="progressBar"></div></div>
-      </div>
-    </section>
-
-    <section id="quizView" class="view">
-      <div class="page-head"><button class="back" data-go="home">‹</button><div><span id="quizModeLabel">기출문제</span><h2 id="quizTitle">문제 풀이</h2></div></div>
-      <div id="quizArea"></div>
-    </section>
-
-    <section id="wrongView" class="view">
-      <div class="page-head"><button class="back" data-go="home">‹</button><div><span>REVIEW</span><h2>오답노트</h2></div></div>
-      <div id="wrongArea"></div>
-    </section>
-
-    <section id="statsView" class="view">
-      <div class="page-head"><button class="back" data-go="home">‹</button><div><span>MY RECORD</span><h2>학습 통계</h2></div></div>
-      <div id="statsArea"></div>
-    </section>
-
-    <section id="adminView" class="view">
-      <div class="page-head"><button class="back" data-go="home">‹</button><div><span>ADMIN</span><h2>문제 관리</h2></div></div>
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-admin-tab="add">문제 추가</button>
-        <button class="admin-tab" data-admin-tab="manage">문제 관리</button>
-      </div>
-      <div id="adminAddArea"></div>
-      <div id="adminManageArea" class="hidden"></div>
-    </section>
-  </main>
-
-  <nav class="bottom-nav">
-    <button class="nav active" data-go="home"><span>⌂</span>홈</button>
-    <button class="nav" data-go="quiz"><span>✎</span>문제</button>
-    <button class="nav" data-go="wrong"><span>▣</span>오답</button>
-    <button class="nav" data-go="stats"><span>◔</span>통계</button>
-  </nav>
+<main>
+<section id="scan" class="tab">
+<div class="card">
+<h2>문제지 사진 분석</h2>
+<p>채점된 수학 문제지를 촬영하거나 갤러리에서 선택하세요.</p>
+<label for="photo" class="drop">📸 사진 선택 / 촬영<input id="photo" type="file" accept="image/*" capture="environment"></label>
+<img id="preview" class="preview hidden">
+<button id="analyze" class="primary" style="margin-top:12px" disabled>AI로 오답 분석하기</button>
+<div id="status" class="status hidden"></div>
 </div>
-<div id="toast"></div>
-<script src="app.js"></script>
+<div class="card">
+<strong>처리 흐름</strong>
+<p class="small">① 문제 인식 → ② 학생 답안·채점표시 인식 → ③ 오답 판별 → ④ 표시 제거 → ⑤ 오답노트 저장</p>
+</div>
+</section>
+
+<section id="wrong" class="tab hidden">
+<div class="card"><h2>오답 모음</h2><div id="wrongList" class="grid"></div></div>
+</section>
+
+<section id="note" class="tab hidden">
+<div class="card"><h2>오답노트</h2><p class="small">브라우저의 인쇄 기능을 이용해 PDF로 저장할 수 있습니다.</p>
+<button id="print" class="primary">🖨️ 오답노트 PDF 저장</button></div>
+<div id="noteList"></div>
+</section>
+
+<section id="settings" class="tab hidden">
+<div class="card">
+<h2>AI 서버 설정</h2>
+<label>FastAPI 서버 주소</label>
+<input id="api" type="text" placeholder="https://your-server.example.com">
+<p class="small">GitHub Pages는 정적 웹사이트이므로 AI 분석 서버는 별도로 배포해야 합니다. OpenAI API 키는 절대 여기에 입력하지 마세요.</p>
+<button id="saveApi" class="primary">저장</button>
+<div id="health" class="status">서버 상태 확인 전</div>
+<button id="checkHealth" class="secondary" style="margin-top:10px">서버 연결 확인</button>
+</div>
+</section>
+</main>
+<footer>AI 수학 오답노트 · PWA · GitHub Pages</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+let selectedFile=null;
+let problems=JSON.parse(localStorage.getItem("wrongProblems")||"[]");
+
+function save(){localStorage.setItem("wrongProblems",JSON.stringify(problems));render();}
+function render(){
+ const list=$("#wrongList"), note=$("#noteList");
+ list.innerHTML=problems.length?"":"<p class='small'>아직 저장된 오답이 없습니다.</p>";
+ note.innerHTML="";
+ problems.forEach((p,i)=>{
+   const html=`<div class="item"><img src="${p.cleanedImage}" alt="오답 문제"><div class="body">
+   <strong>${escapeHtml(p.question||"문제")}</strong>
+   <p>정답: <b>${escapeHtml(p.correctAnswer||"")}</b></p>
+   <p class="small">${escapeHtml(p.explanation||"")} · 신뢰도 ${Math.round((p.confidence||0)*100)}%</p>
+   <button class="secondary danger" onclick="removeProblem(${i})">삭제</button></div></div>`;
+   list.insertAdjacentHTML("beforeend",html);
+   note.insertAdjacentHTML("beforeend",`<div class="card"><h3>${i+1}. ${escapeHtml(p.question||"문제")}</h3><img class="preview" src="${p.cleanedImage}"><p><b>정답:</b> ${escapeHtml(p.correctAnswer||"")}</p><p>${escapeHtml(p.explanation||"")}</p></div>`);
+ });
+}
+function removeProblem(i){problems.splice(i,1);save()}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+$$("nav button").forEach(b=>b.onclick=()=>{
+ $$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ $$(".tab").forEach(x=>x.classList.add("hidden"));$("#"+b.dataset.tab).classList.remove("hidden");
+ render();
+});
+
+$("#photo").onchange=e=>{
+ selectedFile=e.target.files[0]; if(!selectedFile)return;
+ const r=new FileReader();r.onload=()=>{$("#preview").src=r.result;$("#preview").classList.remove("hidden");$("#analyze").disabled=false};r.readAsDataURL(selectedFile);
+};
+
+async function analyze(){
+ const api=localStorage.getItem("api")||"";
+ if(!api){alert("설정에서 AI 서버 주소를 먼저 입력하세요.");return}
+ const reader=new FileReader();
+ reader.onload=async()=>{
+  $("#status").classList.remove("hidden");$("#status").textContent="AI가 문제와 채점 표시를 분석하고 있습니다…";
+  $("#analyze").disabled=true;
+  try{
+   const res=await fetch(api.replace(/\/$/,"")+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({image:reader.result})});
+   if(!res.ok)throw new Error(await res.text());
+   const data=await res.json();
+   const added=(data.wrongProblems||[]).map(x=>({...x,id:crypto.randomUUID(),createdAt:new Date().toISOString()}));
+   problems=[...problems,...added];save();
+   $("#status").textContent=`완료: ${added.length}개의 오답을 찾았습니다.`;
+  }catch(e){$("#status").textContent="오류: "+e.message}
+  finally{$("#analyze").disabled=false}
+ };
+ reader.readAsDataURL(selectedFile);
+}
+$("#analyze").onclick=analyze;
+
+$("#saveApi").onclick=()=>{localStorage.setItem("api",$("#api").value.trim().replace(/\/$/,""));$("#health").textContent="저장했습니다.";};
+$("#api").value=localStorage.getItem("api")||"";
+$("#checkHealth").onclick=async()=>{
+ const api=$("#api").value.trim().replace(/\/$/,""); if(!api)return;
+ $("#health").textContent="확인 중…";
+ try{const r=await fetch(api+"/health");const d=await r.json();$("#health").textContent=d.ok?"🟢 서버 정상":"🔴 서버 응답 이상"}catch(e){$("#health").textContent="🔴 연결 실패"}
+};
+
+$("#print").onclick=()=>{
+ const w=window.open("","_blank"); if(!w)return;
+ w.document.write(`<html><head><title>AI 수학 오답노트</title><style>body{font-family:Arial,sans-serif;padding:25px}img{max-width:100%;max-height:500px;display:block;margin:10px 0}section{page-break-inside:avoid;margin-bottom:35px;border-bottom:1px solid #ddd;padding-bottom:25px}</style></head><body><h1>AI 수학 오답노트</h1>${problems.map((p,i)=>`<section><h2>${i+1}. ${escapeHtml(p.question||"문제")}</h2><img src="${p.cleanedImage}"><p><b>정답:</b> ${escapeHtml(p.correctAnswer||"")}</p><p>${escapeHtml(p.explanation||"")}</p></section>`).join("")}</body></html>`);
+ w.document.close();w.focus();setTimeout(()=>w.print(),500);
+};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
+render();
+</script>
 </body>
 </html>
