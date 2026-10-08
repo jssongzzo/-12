@@ -1,151 +1,35 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#4f46e5">
-<meta name="description" content="AI 수학 오답노트 PWA">
-<link rel="manifest" href="./manifest.json">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5b5ce2"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./manifest.json"><link rel="icon" href="./icons/icon-192.svg">
 <title>AI 수학 오답노트</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;background:#f5f7fb;color:#111827}
-header{background:#4f46e5;color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:5}
-h1{margin:0;font-size:22px}.sub{opacity:.85;font-size:13px;margin-top:5px}
-nav{display:flex;gap:6px;padding:10px;background:white;border-bottom:1px solid #e5e7eb;position:sticky;top:79px;z-index:4;overflow:auto}
-nav button{border:0;background:#eef2ff;color:#3730a3;padding:10px 13px;border-radius:12px;white-space:nowrap}
-nav button.active{background:#4f46e5;color:white}
-main{padding:16px;max-width:760px;margin:auto}.card{background:white;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px #0000000d}
-button.primary{width:100%;border:0;border-radius:14px;padding:14px;background:#4f46e5;color:white;font-size:16px;font-weight:700}
-button.secondary{border:0;border-radius:12px;padding:10px 12px;background:#eef2ff;color:#3730a3}
-input[type=file]{display:none}.drop{border:2px dashed #c7d2fe;border-radius:16px;padding:24px;text-align:center;background:#fafaff}
-.preview{width:100%;border-radius:12px;margin-top:12px;max-height:420px;object-fit:contain;background:#f3f4f6}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.item{border:1px solid #e5e7eb;border-radius:15px;overflow:hidden;background:white}.item img{width:100%;display:block}.item .body{padding:12px}
-.small{font-size:12px;color:#6b7280}.danger{background:#fee2e2!important;color:#991b1b!important}
-label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input[type=text]{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px}
-.hidden{display:none}.status{padding:10px 12px;border-radius:10px;background:#f3f4f6;margin-top:10px;font-size:13px}
-footer{text-align:center;color:#9ca3af;font-size:12px;padding:30px}
+:root{--p:#5b5ce2;--p2:#7c7df0;--bg:#f6f7fb;--card:#fff;--text:#171827;--muted:#6c7082;--line:#e6e7ef;--bad:#e64b5d;--good:#23a26d}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text)}button,input{font:inherit}.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:40px}.top{position:sticky;top:0;z-index:5;background:rgba(246,247,251,.94);backdrop-filter:blur(14px);padding:18px 18px 12px;border-bottom:1px solid var(--line)}.brand{font-size:23px;font-weight:800}.sub{font-size:13px;color:var(--muted);margin-top:4px}.main{padding:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 5px 20px rgba(30,32,60,.04)}.hero{background:linear-gradient(135deg,#5b5ce2,#8586f5);color:#fff;border:0}.hero h1{margin:0 0 8px;font-size:25px}.hero p{margin:0;opacity:.9;line-height:1.55}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.btn{border:0;border-radius:13px;padding:13px 15px;font-weight:750;cursor:pointer}.primary{background:#fff;color:#4e50c9}.secondary{background:rgba(255,255,255,.17);color:#fff;border:1px solid rgba(255,255,255,.3)}.dark{background:var(--p);color:#fff}.outline{background:#fff;border:1px solid var(--line);color:var(--text)}.danger{color:var(--bad)}.section-title{font-size:17px;font-weight:800;margin-bottom:12px}.drop{border:2px dashed #cfd1df;border-radius:17px;padding:25px;text-align:center;color:var(--muted);cursor:pointer}.drop strong{display:block;color:var(--text);font-size:16px;margin-bottom:5px}.preview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.thumb{position:relative;border-radius:13px;overflow:hidden;border:1px solid var(--line);background:#fafafa}.thumb img{display:block;width:100%;height:190px;object-fit:cover}.badge{position:absolute;left:8px;top:8px;background:var(--bad);color:#fff;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800}.badge.good{background:var(--good)}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.status{font-size:13px;color:var(--muted);line-height:1.5}.progress{height:8px;background:#ececf4;border-radius:99px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:var(--p);transition:.3s}.hidden{display:none!important}.err{background:#fff0f2;color:#a52d3c;padding:12px;border-radius:12px;font-size:13px}.result{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:12px}.result img{width:100%;display:block;max-height:500px;object-fit:contain;background:#fafafa}.result-body{padding:14px}.result-title{font-weight:800}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chip{padding:5px 9px;border-radius:999px;background:#f0f1ff;color:#4f51c9;font-size:12px;font-weight:700}.setting{display:grid;grid-template-columns:1fr;gap:8px}.setting input{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px}.small{font-size:12px;color:var(--muted)}@media(min-width:650px){.preview-grid{grid-template-columns:repeat(3,1fr)}.thumb img{height:220px}}
 </style>
 </head>
-<body>
-<header><h1>🤖 AI 수학 오답노트</h1><div class="sub">사진 한 장으로 틀린 문제를 자동 정리</div></header>
-<nav>
-<button class="active" data-tab="scan">📷 사진 분석</button>
-<button data-tab="wrong">❌ 오답 모음</button>
-<button data-tab="note">📒 오답노트</button>
-<button data-tab="settings">⚙️ 설정</button>
-</nav>
-
-<main>
-<section id="scan" class="tab">
-<div class="card">
-<h2>문제지 사진 분석</h2>
-<p>채점된 수학 문제지를 촬영하거나 갤러리에서 선택하세요.</p>
-<label for="photo" class="drop">📸 사진 선택 / 촬영<input id="photo" type="file" accept="image/*" capture="environment"></label>
-<img id="preview" class="preview hidden">
-<button id="analyze" class="primary" style="margin-top:12px" disabled>AI로 오답 분석하기</button>
-<div id="status" class="status hidden"></div>
-</div>
-<div class="card">
-<strong>처리 흐름</strong>
-<p class="small">① 문제 인식 → ② 학생 답안·채점표시 인식 → ③ 오답 판별 → ④ 표시 제거 → ⑤ 오답노트 저장</p>
-</div>
-</section>
-
-<section id="wrong" class="tab hidden">
-<div class="card"><h2>오답 모음</h2><div id="wrongList" class="grid"></div></div>
-</section>
-
-<section id="note" class="tab hidden">
-<div class="card"><h2>오답노트</h2><p class="small">브라우저의 인쇄 기능을 이용해 PDF로 저장할 수 있습니다.</p>
-<button id="print" class="primary">🖨️ 오답노트 PDF 저장</button></div>
-<div id="noteList"></div>
-</section>
-
-<section id="settings" class="tab hidden">
-<div class="card">
-<h2>AI 서버 설정</h2>
-<label>FastAPI 서버 주소</label>
-<input id="api" type="text" placeholder="https://your-server.example.com">
-<p class="small">GitHub Pages는 정적 웹사이트이므로 AI 분석 서버는 별도로 배포해야 합니다. OpenAI API 키는 절대 여기에 입력하지 마세요.</p>
-<button id="saveApi" class="primary">저장</button>
-<div id="health" class="status">서버 상태 확인 전</div>
-<button id="checkHealth" class="secondary" style="margin-top:10px">서버 연결 확인</button>
-</div>
-</section>
-</main>
-<footer>AI 수학 오답노트 · PWA · GitHub Pages</footer>
-
+<body><div class="app">
+<header class="top"><div class="brand">🧮 AI 수학 오답노트</div><div class="sub">사진 한 장으로 오답을 찾아 깨끗한 문제와 풀이를 정리합니다.</div></header>
+<main class="main">
+<section class="card hero"><h1>채점된 시험지를 올려주세요</h1><p>AI가 문제 영역을 찾고, 맞고 틀린 문제를 판별한 뒤 틀린 문제만 골라냅니다. 이후 학생 답안과 채점 표시를 제거한 문제 이미지를 만들고 풀이까지 정리합니다.</p><div class="actions"><button class="btn primary" id="cameraBtn">📷 카메라 촬영</button><button class="btn secondary" id="uploadBtn">🖼️ 사진 선택</button></div><input id="fileInput" type="file" accept="image/*" capture="environment" multiple class="hidden"></section>
+<section class="card hidden" id="previewCard"><div class="row"><div class="section-title">업로드한 시험지</div><button class="btn outline" id="clearBtn">전체 삭제</button></div><div id="previewGrid" class="preview-grid"></div><button class="btn dark" style="width:100%;margin-top:14px" id="analyzeBtn">🤖 AI로 오답 분석 시작</button></section>
+<section class="card hidden" id="progressCard"><div class="section-title">AI 처리 중</div><div class="status" id="statusText">사진을 분석하고 있습니다.</div><div class="progress"><div class="bar" id="bar"></div></div><div class="small">문제 인식 → 오답 판별 → 오답 영역 분리 → 학생 답안/채점 표시 제거 → 풀이 생성</div></section>
+<section class="card hidden" id="resultCard"><div class="row"><div class="section-title">오답노트</div><button class="btn dark" id="printBtn">📄 PDF 저장</button></div><div id="summary" class="status"></div><div id="results"></div></section>
+<section class="card"><div class="section-title">⚙️ AI 서버 설정</div><div class="setting"><input id="apiUrl" placeholder="https://your-worker.example.workers.dev"><button class="btn outline" id="saveUrl">서버 주소 저장</button><div class="small">GitHub Pages에는 OpenAI API 키를 넣지 않습니다. Cloudflare Worker 등 서버리스 백엔드의 주소만 입력하세요.</div></div></section>
+<section class="card"><div class="section-title">처리 방식</div><div class="status">① 시험지 사진 분석<br>② 문제별 영역과 학생 답안/채점 표시 탐지<br>③ 틀린 문제만 선택<br>④ 원본의 인쇄 문제를 최대한 보존하며 표시를 제거한 이미지 생성<br>⑤ 문제·정답·풀이·틀린 이유를 오답노트에 정리</div></section>
+</main></div>
 <script>
-const $=s=>document.querySelector(s);
-const $$=s=>document.querySelectorAll(s);
-let selectedFile=null;
-let problems=JSON.parse(localStorage.getItem("wrongProblems")||"[]");
-
-function save(){localStorage.setItem("wrongProblems",JSON.stringify(problems));render();}
-function render(){
- const list=$("#wrongList"), note=$("#noteList");
- list.innerHTML=problems.length?"":"<p class='small'>아직 저장된 오답이 없습니다.</p>";
- note.innerHTML="";
- problems.forEach((p,i)=>{
-   const html=`<div class="item"><img src="${p.cleanedImage}" alt="오답 문제"><div class="body">
-   <strong>${escapeHtml(p.question||"문제")}</strong>
-   <p>정답: <b>${escapeHtml(p.correctAnswer||"")}</b></p>
-   <p class="small">${escapeHtml(p.explanation||"")} · 신뢰도 ${Math.round((p.confidence||0)*100)}%</p>
-   <button class="secondary danger" onclick="removeProblem(${i})">삭제</button></div></div>`;
-   list.insertAdjacentHTML("beforeend",html);
-   note.insertAdjacentHTML("beforeend",`<div class="card"><h3>${i+1}. ${escapeHtml(p.question||"문제")}</h3><img class="preview" src="${p.cleanedImage}"><p><b>정답:</b> ${escapeHtml(p.correctAnswer||"")}</p><p>${escapeHtml(p.explanation||"")}</p></div>`);
- });
-}
-function removeProblem(i){problems.splice(i,1);save()}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-
-$$("nav button").forEach(b=>b.onclick=()=>{
- $$("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
- $$(".tab").forEach(x=>x.classList.add("hidden"));$("#"+b.dataset.tab).classList.remove("hidden");
- render();
-});
-
-$("#photo").onchange=e=>{
- selectedFile=e.target.files[0]; if(!selectedFile)return;
- const r=new FileReader();r.onload=()=>{$("#preview").src=r.result;$("#preview").classList.remove("hidden");$("#analyze").disabled=false};r.readAsDataURL(selectedFile);
-};
-
-async function analyze(){
- const api=localStorage.getItem("api")||"";
- if(!api){alert("설정에서 AI 서버 주소를 먼저 입력하세요.");return}
- const reader=new FileReader();
- reader.onload=async()=>{
-  $("#status").classList.remove("hidden");$("#status").textContent="AI가 문제와 채점 표시를 분석하고 있습니다…";
-  $("#analyze").disabled=true;
-  try{
-   const res=await fetch(api.replace(/\/$/,"")+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({image:reader.result})});
-   if(!res.ok)throw new Error(await res.text());
-   const data=await res.json();
-   const added=(data.wrongProblems||[]).map(x=>({...x,id:crypto.randomUUID(),createdAt:new Date().toISOString()}));
-   problems=[...problems,...added];save();
-   $("#status").textContent=`완료: ${added.length}개의 오답을 찾았습니다.`;
-  }catch(e){$("#status").textContent="오류: "+e.message}
-  finally{$("#analyze").disabled=false}
- };
- reader.readAsDataURL(selectedFile);
-}
-$("#analyze").onclick=analyze;
-
-$("#saveApi").onclick=()=>{localStorage.setItem("api",$("#api").value.trim().replace(/\/$/,""));$("#health").textContent="저장했습니다.";};
-$("#api").value=localStorage.getItem("api")||"";
-$("#checkHealth").onclick=async()=>{
- const api=$("#api").value.trim().replace(/\/$/,""); if(!api)return;
- $("#health").textContent="확인 중…";
- try{const r=await fetch(api+"/health");const d=await r.json();$("#health").textContent=d.ok?"🟢 서버 정상":"🔴 서버 응답 이상"}catch(e){$("#health").textContent="🔴 연결 실패"}
-};
-
-$("#print").onclick=()=>{
- const w=window.open("","_blank"); if(!w)return;
- w.document.write(`<html><head><title>AI 수학 오답노트</title><style>body{font-family:Arial,sans-serif;padding:25px}img{max-width:100%;max-height:500px;display:block;margin:10px 0}section{page-break-inside:avoid;margin-bottom:35px;border-bottom:1px solid #ddd;padding-bottom:25px}</style></head><body><h1>AI 수학 오답노트</h1>${problems.map((p,i)=>`<section><h2>${i+1}. ${escapeHtml(p.question||"문제")}</h2><img src="${p.cleanedImage}"><p><b>정답:</b> ${escapeHtml(p.correctAnswer||"")}</p><p>${escapeHtml(p.explanation||"")}</p></section>`).join("")}</body></html>`);
- w.document.close();w.focus();setTimeout(()=>w.print(),500);
-};
-if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
-render();
-</script>
-</body>
-</html>
+const $=s=>document.querySelector(s);let files=[];let results=[];
+const apiKey='errnote_api_url';$('#apiUrl').value=localStorage.getItem(apiKey)||'';
+$('#cameraBtn').onclick=()=>{$('#fileInput').click()};$('#uploadBtn').onclick=()=>{$('#fileInput').click()};
+$('#fileInput').onchange=e=>{files=[...files,...e.target.files];renderPreviews()};$('#clearBtn').onclick=()=>{files=[];renderPreviews()};
+function renderPreviews(){const c=$('#previewCard'),g=$('#previewGrid');g.innerHTML='';if(!files.length){c.classList.add('hidden');return}c.classList.remove('hidden');files.forEach((f,i)=>{const u=URL.createObjectURL(f);g.insertAdjacentHTML('beforeend',`<div class="thumb"><img src="${u}"><span class="badge good">원본 ${i+1}</span></div>`)});}
+$('#saveUrl').onclick=()=>{localStorage.setItem(apiKey,$('#apiUrl').value.trim());alert('서버 주소를 저장했습니다.')};
+function setProgress(n,t){$('#bar').style.width=n+'%';$('#statusText').textContent=t}
+async function analyze(){if(!files.length)return alert('사진을 먼저 선택해주세요.');const url=localStorage.getItem(apiKey)||$('#apiUrl').value.trim();if(!url)return alert('AI 서버 주소를 먼저 입력해주세요.');$('#progressCard').classList.remove('hidden');$('#resultCard').classList.add('hidden');setProgress(8,'사진을 준비하고 있습니다.');const images=[];for(const f of files){images.push(await toDataURL(f))}setProgress(25,'문제와 채점 상태를 AI가 분석하고 있습니다.');try{const r=await fetch(url.replace(/\/$/,'')+'/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({images})});if(!r.ok)throw new Error(await r.text());const data=await r.json();setProgress(68,'틀린 문제를 정리하고 깨끗한 문제 이미지를 생성하고 있습니다.');results=data.results||[];setProgress(100,'완료되었습니다.');renderResults(data)}catch(e){console.error(e);$('#statusText').textContent='처리 실패';$('#progressCard').insertAdjacentHTML('beforeend',`<div class="err">${escapeHtml(e.message||'AI 서버와 통신하지 못했습니다.')}</div>`)}}
+function renderResults(data){$('#resultCard').classList.remove('hidden');$('#summary').textContent=`총 ${data.total||0}개 문제 중 ${data.wrong||results.length}개를 오답으로 분류했습니다.`;const box=$('#results');box.innerHTML='';results.forEach((x,i)=>{box.insertAdjacentHTML('beforeend',`<article class="result"><img src="${x.cleanedImage||x.originalImage}" alt="오답 ${i+1}"><div class="result-body"><div class="result-title">오답 ${i+1} ${x.problemNumber?`· ${escapeHtml(String(x.problemNumber))}`:''}</div><div class="chips"><span class="chip">학생 답: ${escapeHtml(x.studentAnswer||'미인식')}</span><span class="chip">정답: ${escapeHtml(x.correctAnswer||'미인식')}</span></div><div class="status"><b>문제:</b> ${escapeHtml(x.problemText||'이미지 참조')}<br><br><b>틀린 이유:</b> ${escapeHtml(x.reason||'분석 결과 없음')}<br><br><b>풀이:</b> ${escapeHtml(x.solution||'분석 결과 없음')}</div></div></article>`)});}
+$('#analyzeBtn').onclick=analyze;$('#printBtn').onclick=()=>window.print();
+function toDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(console.warn);
+</script></body></html>
